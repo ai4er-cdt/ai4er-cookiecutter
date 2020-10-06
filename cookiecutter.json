@@ -1,6 +1,6 @@
 {
     "repository_name": "sample_repo",
-    "github_name" : "cookiecutter",
+    "github_username" : "cookiecutter",
     "github_email" : "cookiecutter@does-not-exist.org",
     "github_organisation" : "Croydon-Brixton"
 }
