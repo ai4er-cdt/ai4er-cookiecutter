@@ -9,6 +9,7 @@ user_name = "{{cookiecutter.github_username}}"
 user_email = "{{cookiecutter.github_email}}"
 organisation = "{{cookiecutter.github_organisation}}"
 
+
 # Derived variables
 repository_url = "git@github.com:" + organisation + "/" + repository_name + ".git"
 
@@ -18,6 +19,9 @@ subprocess.call(['git', 'init'])
 # Configure git username and email
 subprocess.call(['git', 'config', 'user.name', user_name])
 subprocess.call(['git', 'config', 'user.email', user_email])
+
+# Works only if you do not have 2FA 
+subprocess.call(["curl", "-u",  user_name,  "https://api.github.com/user/repos",  "-d", "{'name':'%s'}" % repository_name])
 
 # Add remote at the repository URL
 subprocess.call(['git', 'remote', 'add', 'origin', repository_url])
