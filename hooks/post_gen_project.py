@@ -2,35 +2,47 @@ import os
 import sys
 import shutil
 import subprocess
+from utils import query_yes_no, query_field
 
-# Variables replaced by cookiecutter
-repository_name = "{{cookiecutter.repository_name}}"
-user_name = "{{cookiecutter.github_username}}"
-user_email = "{{cookiecutter.github_email}}"
-organisation = "{{cookiecutter.github_organisation}}"
+# Control flow:
+create_repo = query_yes_no("Would you like to link this repository to a repository on github.com?")
 
+if create_repo:
+    # Query repo name and owner from user
+    repo_name = query_field("What is the name of the github.com repository you wish to link to?",
+        default="{{cookiecutter.repository_name}}",
+        len_limit=100)
 
-# Derived variables
-repository_url = "git@github.com:" + organisation + "/" + repository_name + ".git"
+    repo_owner = query_field("What is the name of the owner (user/organisation) of the repository?",
+        default="ai4er-cdt",
+        len_limit=30) 
 
-# Initialize project as git repository
-subprocess.call(['git', 'init'])
+    # Set user name and email for first commit
+    user_name = "ai4er-cookiecutter"
+    user_email = "cookiecutter@has-no-mail.org"
 
-# Configure git username and email
-subprocess.call(['git', 'config', 'user.name', user_name])
-subprocess.call(['git', 'config', 'user.email', user_email])
+    # Derived variables
+    repo_url = "git@github.com:" + repo_owner + "/" + repo_name + ".git"
+    print(f"Linking to {repo_url}.")
 
-# Works only if you do not have 2FA 
-subprocess.call(["curl", "-u",  user_name,  "https://api.github.com/user/repos",  "-d", "{'name':'%s'}" % repository_name])
+    # Initialize project as git repository
+    subprocess.call(['git', 'init'])
 
-# Add remote at the repository URL
-subprocess.call(['git', 'remote', 'add', 'origin', repository_url])
-subprocess.call(['git', 'add', '-A'])
-subprocess.call(['git', 'commit', '-m', 'Initalization'])
-subprocess.call(['git', 'push', '-f', 'origin', 'master'])
+    # Configure git username and email
+    subprocess.call(['git', 'config', 'user.name', user_name])
+    subprocess.call(['git', 'config', 'user.email', user_email])
 
-# Unset the user name and email
-subprocess.call(['git', 'config', '--unset', 'user.name'])
-subprocess.call(['git', 'config', '--unset', 'user.email'])
+    # TODO: Automatically create repo (only for users without 2FA) 
+    # subprocess.call(["curl", "-u",  user_name,  "https://api.github.com/user/repos",  "-d", "{'name':'%s'}" % repo_name])
 
-os.chdir('..')
+    # Add remote at the repository URL
+    subprocess.call(['git', 'remote', 'add', 'origin', repo_url])
+    subprocess.call(['git', 'add', '-A'])
+    subprocess.call(['git', 'commit', '-m', 'Initalization'])
+    subprocess.call(['git', 'push', '-f', 'origin', 'master'])
+
+    # Unset the user name and email form "cookiecutter" so user can use his own.
+    subprocess.call(['git', 'config', '--unset', 'user.name'])
+    subprocess.call(['git', 'config', '--unset', 'user.email'])
+
+    os.chdir('..')
