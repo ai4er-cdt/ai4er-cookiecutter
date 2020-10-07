@@ -106,5 +106,23 @@ if __name__ == "__main__":
         # Unset the user name and email form "cookiecutter" so user can use his own.
         subprocess.call(['git', 'config', '--unset', 'user.name'])
         subprocess.call(['git', 'config', '--unset', 'user.email'])
+        
+    link_to_data = query_yes_no("Would you like to link to a data directory on your machine?", default="no")
 
-        os.chdir('..')
+    if link_to_data:
+        while True:
+            data_path = query_field("At which path is your data directory located?", default=None)
+
+            if os.path.exists(data_path):
+                print("Ok creating the link.")
+                subprocess.call(["ln", "-s", data_path, "."])
+                # TODO: Add data path to .gitignore
+                break
+
+            else:
+                print(f"The path {data_path} does not exist. Please enter a valid path.")
+
+    os.chdir('..')
+
+        
+            
