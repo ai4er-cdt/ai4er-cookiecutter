@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import subprocess
+import pathlib
 
 def query_yes_no(question: str, default: str="yes") -> bool:
     """Ask a yes/no question via input() and return their answer.
@@ -114,9 +115,20 @@ if __name__ == "__main__":
             data_path = query_field("At which path is your data directory located?", default=None)
 
             if os.path.exists(data_path):
-                print("Ok creating the link.")
+                # Transform into pathlib object for handy operations
+                data_path = pathlib.PurePath(data_path)
+                
+                # Create symlink
+                print("Ok, creating the link.")
                 subprocess.call(["ln", "-s", data_path, "."])
-                # TODO: Add data path to .gitignore
+                
+                # Add data path to .gitignore
+                with open(".gitignore", "a") as f:
+                    f.write("\n\n" + "# Ignore data folder\n" + 
+                        data_path.name + "\n" + 
+                        data_path.name + "/" + "\n"
+                        "." + data_path.name + "/")
+
                 break
 
             else:
