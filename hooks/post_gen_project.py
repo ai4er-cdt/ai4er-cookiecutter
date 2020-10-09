@@ -67,9 +67,35 @@ def query_field(question: str, default: str = None, len_limit: int = 100) -> str
 
 if __name__ == "__main__":
         
-    # Control flow:
-    create_repo = query_yes_no("Would you like to link this repository to a repository on github.com?")
+    # Control flow:  
+    # 1. Creating link to data
+    link_to_data = query_yes_no("Would you like to link to a data directory on your machine?", default="no")
+    if link_to_data:
+        while True:
+            data_path = query_field("At which path is your data directory located?", default=None)
 
+            if os.path.exists(data_path):
+                # Transform into pathlib object for handy operations
+                data_path = pathlib.PurePath(data_path)
+                
+                # Create symlink
+                print("Ok, creating the link.")
+                subprocess.call(["ln", "-s", data_path, "."])
+                
+                # Add data path to .gitignore
+                with open(".gitignore", "a") as f:
+                    f.write("\n\n" + "# Ignore data folder\n" + 
+                        data_path.name + "\n" + 
+                        data_path.name + "/" + "\n"
+                        "." + data_path.name + "/")
+
+                break
+
+            else:
+                print(f"The path {data_path} does not exist. Please enter a valid path.")
+     
+    # 2. Creating link to github repo
+    create_repo = query_yes_no("Would you like to link this repository to a repository on github.com?", default="no")
     if create_repo:
         # Query repo name and owner from user
         repo_name = query_field("What is the name of the github.com repository you wish to link to?",
@@ -106,34 +132,27 @@ if __name__ == "__main__":
 
         # Unset the user name and email form "cookiecutter" so user can use his own.
         subprocess.call(['git', 'config', '--unset', 'user.name'])
-        subprocess.call(['git', 'config', '--unset', 'user.email'])
-        
-    link_to_data = query_yes_no("Would you like to link to a data directory on your machine?", default="no")
+        subprocess.call(['git', 'config', '--unset', 'user.email'])        
 
-    if link_to_data:
-        while True:
-            data_path = query_field("At which path is your data directory located?", default=None)
-
-            if os.path.exists(data_path):
-                # Transform into pathlib object for handy operations
-                data_path = pathlib.PurePath(data_path)
-                
-                # Create symlink
-                print("Ok, creating the link.")
-                subprocess.call(["ln", "-s", data_path, "."])
-                
-                # Add data path to .gitignore
-                with open(".gitignore", "a") as f:
-                    f.write("\n\n" + "# Ignore data folder\n" + 
-                        data_path.name + "\n" + 
-                        data_path.name + "/" + "\n"
-                        "." + data_path.name + "/")
-
-                break
-
-            else:
-                print(f"The path {data_path} does not exist. Please enter a valid path.")
-
+    # 3. Creating conda environment
+    # TODO: Add venv environment creation as alternative
+    create_conda_env = query_yes_no("Would you like to create a project environment using conda?", default="no")
+    if create_conda_env:
+        # Check that conda command exists
+        from distutils.spawn import find_executable
+        if find_executable("conda") is None:
+            print("No conda executable found. Please first install conda on your machine and add it to the PATH.")
+        else:
+            # Call conda executable to create environment 
+            subprocess.call(["conda", "env", "create", "--prefix=./env", "-f", "environment.yml"])
+            env_path = os.path.abspath("./env")
+            # Provide user feedback on how to activate
+            print(f"Environment successfully created at {env_path}")
+            print("To activate your conda environment, navigate to your project directory and call \n\t conda activate ./env")
+            
+            # Update conda config to show only the short name of the env.
+            subprocess.call(["conda", "config", "--set", "env_prompt", "'({name})'"])
+         
     os.chdir('..')
 
         
