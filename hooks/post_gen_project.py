@@ -135,6 +135,7 @@ if __name__ == "__main__":
         subprocess.call(['git', 'config', '--unset', 'user.email'])        
 
     # 3. Creating conda environment
+    # TODO: Add venv environment creation as alternative
     create_conda_env = query_yes_no("Would you like to create a project environment using conda?", default="no")
     if create_conda_env:
         # Check that conda command exists
