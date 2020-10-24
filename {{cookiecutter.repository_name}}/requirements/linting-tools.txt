@@ -1,4 +1,0 @@
-flake8  # flake8 linter
-flake8-docstrings  # docstring support for flake8
-black  # automatic formatting provider
-isort  # automatic import sorter
