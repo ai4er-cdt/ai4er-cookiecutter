@@ -1,3 +1,4 @@
 {
-    "repository_name": "sample_repo"
+    "repository_name": "sample_repo",
+    "python_version": "3.8"
 }
