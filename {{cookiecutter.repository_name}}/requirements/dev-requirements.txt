@@ -2,8 +2,9 @@
 -e .
 
 # external requirements (mostly linters and formatters)
-flake8  # flake8 linter
-flake8-docstrings  # docstring support for flake8
-black  # automatic formatting provider
-isort  # automatic import sorter
-python-dotenv  # environment variable manager
+flake8              # flake8 linter
+flake8-docstrings   # docstring support for flake8
+mypy                # python type checker
+black               # automatic formatting provider
+isort               # automatic import sorter
+python-dotenv       # environment variable manager
