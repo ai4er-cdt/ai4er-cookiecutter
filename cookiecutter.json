@@ -1,6 +1,6 @@
 {
     "repository_name": "sample_repo",
-    "python_version": "3.8",
+    "project_name": "Sample project",
     "author_name": "Your name (or your organization/company/team)",
     "description": "A short description of the project.",
     "open_source_license": [
@@ -8,4 +8,5 @@
         "BSD-3-Clause",
         "No license file"
     ],
+    "python_version": "3.8",
 }
