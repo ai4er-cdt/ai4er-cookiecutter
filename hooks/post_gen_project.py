@@ -141,22 +141,23 @@ if __name__ == "__main__":
         # Check that conda command exists
         from distutils.spawn import find_executable
         if find_executable("conda") is None:
-            print("No conda executable found. Please first install conda on your machine and add it to the PATH.")
+            print("\U0001F635 No conda executable found. Please first install conda on your machine and add it to the PATH.")
         else:
             # Call conda executable to create environment 
             subprocess.call(["conda", "env", "create", "--prefix=./env", "-f", "requirements/environment.yml"])
             env_path = os.path.abspath("./env")
             # Provide user feedback on how to activate
-            print(f"Environment successfully created at {env_path}")
+            print(f"\U0001F607 Environment successfully created at {env_path}")
             print("To activate your conda environment, navigate to your project directory and call \n\t conda activate ./env")
             
             # Update conda config to show only the short name of the env.
             subprocess.call("conda config --set env_prompt '({name})'".split(" "))
          
             # Activate conda
+            print("Activating environment.")
             subprocess.call("conda activate ./env".split(" "))
             subprocess.call("pip install -r requirements/dev-requirements.txt".split(" "))
-            if query_yes_no("Would you like to install jupyter tools?", default=no):
+            if query_yes_no("Would you like to install jupyter tools?", default="no"):
                 subprocess.call("sh ./.setup_scripts/jupyter_tools.sh".split(" "))
 
     os.chdir('..')
