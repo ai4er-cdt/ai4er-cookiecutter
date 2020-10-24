@@ -1,5 +1,6 @@
 # AI4ER Project Generation Cookiecutter
 This cookiecutter provides a quick and easy way to create new projects for most environmental data science research projects. 
+It was enspired by [Cookiecutter DataScience](https://drivendata.github.io/cookiecutter-data-science/)
 
 ## Usage
 To use this cookiecutter, you simply type
