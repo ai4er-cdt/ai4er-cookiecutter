@@ -1,0 +1,16 @@
+# Linear algebra and math libraries
+numpy
+scipy
+
+# Data wrangling libraries
+pandas
+xarray
+pandas-profiling
+
+# Machine Learning libraries
+scikit-learn
+statsmodels
+
+# Visualization libraries
+matplotlib
+seaborn

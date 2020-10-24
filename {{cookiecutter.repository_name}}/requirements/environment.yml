@@ -3,4 +3,4 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.8 
+  - python={{cookiecutter.python_version}}
