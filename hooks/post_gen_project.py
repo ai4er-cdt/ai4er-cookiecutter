@@ -1,18 +1,25 @@
 import os
 import sys
-import shutil
+#import shutil
 import subprocess
 import pathlib
+from typing import Sequence
 
 def query_yes_no(question: str, default: str="yes") -> bool:
-    """Ask a yes/no question via input() and return their answer.
+    """
+    Ask a yes/no question via input() and return their answer.
 
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
+    Args:
+        question (str): The question presented to the user
+        default (str, optional): is the presumed answer if the user just hits <Enter>.
+            It must be "yes" (the default), "no" or None (meaning
+            an answer is required of the user). Defaults to "yes".
 
-    The "answer" return value is True for "yes" or False for "no".
+    Raises:
+        ValueError: in case of an invalid default.
+
+    Returns:
+        bool: True for "yes" or False for "no".
     """
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}
@@ -36,24 +43,68 @@ def query_yes_no(question: str, default: str="yes") -> bool:
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
+def query_options(question: str, options: Sequence[str], default: int=0) -> str:
+    """
+    Ask the user to choose one of the options via input() and return their answer.
+
+    Args:
+        question (str):  Question that is presented to the user.
+        options (Sequence[str]): List of options among which the user can choose.
+        default (int, optional): is the presumed answer if the user just hits <Enter>.
+            It must be an integer in the range [0, len(options)].
+            Defaults to 0.
+
+    Raises:
+        ValueError: in case of an invalid default answer.
+
+    Returns:
+        str: The chosen option from options.
+    """
+    if not isinstance(options, Sequence) or len(options) == 0:
+        raise ValueError("Options must be a Sequence of length > 0.")
+    if not (0 <= default < len(options)):
+        raise ValueError(f"Default value must be in range (0, {len(options)}).")
+
+    prompt = (f"[{default}]\n"
+        + "\n".join([f"[{i}] - {option}" for i, option in enumerate(options)]))
+
+    valid =[str(i) for i in range(0, len(options))]
+
+    while True:
+        sys.stdout.write(question + prompt + "\n")
+        choice = input().lower()
+        if choice == '':
+            return options[default]
+        elif choice in valid:
+            return options[int(choice)]
+        else:
+            sys.stdout.write("Please respond with a number "
+                f"between 0 and {len(options)}\n")
+
 def query_field(question: str, default: str = None, len_limit: int = 100) -> str:
-    """Ask a question via input() and return their answer.
+    """
+    Ask a question via input() and return their answer.
 
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be a string or None (meaning
-        an answer is required of the user).
-    "len_limit" is the maximal number of characters that an answer
-        can have and still be accepted.
+    Args:
+        question (str): The question presented to the user
+        default (str, optional): is the presumed answer if the user just hits <Enter>.
+            It must be a string or None (meaning an answer is required of the user).
+            Defaults to None.
+        len_limit (int, optional): maximal number of characters that an answer
+            can have and still be accepted. Defaults to 100.
 
-    The "answer" return value is the string typed by the user.
+    Raises:
+        ValueError: In case of an invalid default
+
+    Returns:
+        str: The answer the user has given (or default)
     """
     if default is None:
         prompt = "  "
     elif isinstance(default, str):
         prompt = f" [{default}] "
     else:
-        raise ValueError("invalid default answer: '%s'" % default)
+        raise ValueError(f"invalid default answer: '{default}'")
 
     while True:
         sys.stdout.write(question + prompt)
@@ -63,7 +114,8 @@ def query_field(question: str, default: str = None, len_limit: int = 100) -> str
         elif len(user_answer) < len_limit:
             return user_answer
         else:
-            sys.stdout.write(f"Please respond with a non-empty answer that has less than {len_limit} characters.\n")
+            sys.stdout.write(f"Please respond with a non-empty answer that"
+                "has less than {len_limit} characters.\n")
 
 if __name__ == "__main__":
         
@@ -155,7 +207,7 @@ if __name__ == "__main__":
          
             # Activate conda
             print("Activating environment.")
-            subprocess.call("conda activate ./env".split(" "))
+            subprocess.call("conda activate ./env".split(" "))  # TODO: Does not seem to work yet.
             subprocess.call("pip install -r requirements/dev-requirements.txt".split(" "))
             if query_yes_no("Would you like to install jupyter tools?", default="no"):
                 subprocess.call("sh ./.setup_scripts/jupyter_tools.sh".split(" "))
