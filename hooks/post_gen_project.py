@@ -34,7 +34,7 @@ def query_yes_no(question: str, default: str="yes") -> bool:
 
     while True:
         sys.stdout.write(question + prompt)
-        choice = input().lower()
+        choice = input().lower().strip()
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
@@ -72,14 +72,14 @@ def query_options(question: str, options: Sequence[str], default: int=0) -> str:
 
     while True:
         sys.stdout.write(question + prompt + "\n")
-        choice = input().lower()
+        choice = input().lower().strip()
         if choice == '':
             return options[default]
         elif choice in valid:
             return options[int(choice)]
         else:
             sys.stdout.write("Please respond with a number "
-                f"between 0 and {len(options)}\n")
+                f"from 0 to {len(options)-1}.\n")
 
 def query_field(question: str, default: str = None, len_limit: int = 100) -> str:
     """
@@ -108,14 +108,14 @@ def query_field(question: str, default: str = None, len_limit: int = 100) -> str
 
     while True:
         sys.stdout.write(question + prompt)
-        user_answer = input()
+        user_answer = input().strip()
         if default is not None and user_answer == '':
             return default
-        elif len(user_answer) < len_limit:
+        elif 0 < len(user_answer) < len_limit:
             return user_answer
         else:
-            sys.stdout.write(f"Please respond with a non-empty answer that"
-                "has less than {len_limit} characters.\n")
+            sys.stdout.write(f"Please respond with a non-empty answer that "
+                f"has less than {len_limit} characters.\n")
 
 if __name__ == "__main__":
         
