@@ -118,8 +118,8 @@ def query_field(question: str, default: str = None, len_limit: int = 100) -> str
                 f"has less than {len_limit} characters.\n")
 
 if __name__ == "__main__":
-        
-    # Control flow:  
+
+    # Control flow:
     # 1. Creating link to data
     link_to_data = query_yes_no("Would you like to link to a data directory on your machine?", default="no")
     if link_to_data:
@@ -129,15 +129,15 @@ if __name__ == "__main__":
             if os.path.exists(data_path):
                 # Transform into pathlib object for handy operations
                 data_path = pathlib.PurePath(data_path)
-                
+
                 # Create symlink
                 print("Ok, creating the link.")
                 subprocess.call(["ln", "-s", data_path, "."])
-                
+
                 # Add data path to .gitignore
                 with open(".gitignore", "a") as f:
-                    f.write("\n\n" + "# Ignore data folder\n" + 
-                        data_path.name + "\n" + 
+                    f.write("\n\n" + "# Ignore data folder\n" +
+                        data_path.name + "\n" +
                         data_path.name + "/" + "\n"
                         "." + data_path.name + "/")
 
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
             else:
                 print(f"The path {data_path} does not exist. Please enter a valid path.")
-     
+
     # 2. Creating link to github repo
     create_repo = query_yes_no("Would you like to link this repository to a repository on github.com?", default="no")
     if create_repo:
@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
         repo_owner = query_field("What is the name of the owner (user/organisation) of the repository?",
             default="ai4er-cdt",
-            len_limit=30) 
+            len_limit=30)
 
         # Set user name and email for first commit
         user_name = "ai4er-cookiecutter"
@@ -173,7 +173,7 @@ if __name__ == "__main__":
         subprocess.call(['git', 'config', 'user.name', user_name])
         subprocess.call(['git', 'config', 'user.email', user_email])
 
-        # TODO: Automatically create repo (only for users without 2FA) 
+        # TODO: Automatically create repo (only for users without 2FA)
         # subprocess.call(["curl", "-u",  user_name,  "https://api.github.com/user/repos",  "-d", "{'name':'%s'}" % repo_name])
 
         # Add remote at the repository URL
@@ -184,7 +184,7 @@ if __name__ == "__main__":
 
         # Unset the user name and email form "cookiecutter" so user can use his own.
         subprocess.call(['git', 'config', '--unset', 'user.name'])
-        subprocess.call(['git', 'config', '--unset', 'user.email'])        
+        subprocess.call(['git', 'config', '--unset', 'user.email'])
 
     # 3. Creating conda environment
     # TODO: Add venv environment creation as alternative
@@ -195,16 +195,16 @@ if __name__ == "__main__":
         if find_executable("conda") is None:
             print("\U0001F635 No conda executable found. Please first install conda on your machine and add it to the PATH.")
         else:
-            # Call conda executable to create environment 
+            # Call conda executable to create environment
             subprocess.call(["conda", "env", "create", "--prefix=./env", "-f", "requirements/environment.yml"])
             env_path = os.path.abspath("./env")
             # Provide user feedback on how to activate
             print(f"\U0001F607 Environment successfully created at {env_path}")
             print("To activate your conda environment, navigate to your project directory and call \n\t conda activate ./env")
-            
+
             # Update conda config to show only the short name of the env.
             subprocess.call("conda config --set env_prompt '({name})'".split(" "))
-         
+
             # Activate conda
             print("Activating environment.")
             subprocess.call("conda activate ./env".split(" "))  # TODO: Does not seem to work yet.
