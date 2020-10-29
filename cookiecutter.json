@@ -5,7 +5,8 @@
     "description": "A short description of the project.",
     "open_source_license": [
         "MIT",
-        "BSD-3-Clause",
+        "BSD",
+        "GPLv3"
         "No license file"
     ],
     "python_version": "3.8"

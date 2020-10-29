@@ -1,6 +1,11 @@
 # {{cookiecutter.project_name}}
 
 {{cookiecutter.description}}
+{% if cookiecutter.open_source_license == "MIT" %} [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+{% elif cookiecutter.open_source_license == "BSD" %} [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+{% elif cookiecutter.open_source_license == "GPLv3" %} [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+{% elif cookiecutter.open_source_license == "Apache Software License 2.0" %} [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+{% endif %}
 
 ## Project Organization
 ```
