@@ -1,5 +1,5 @@
 # local package
--e .
+-e ../.
 
 # external requirements (mostly linters and formatters)
 flake8              # flake8 linter
