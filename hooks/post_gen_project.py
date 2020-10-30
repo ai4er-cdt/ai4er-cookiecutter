@@ -137,13 +137,19 @@ if __name__ == "__main__":
                 "At which path is your data directory located?", default=None
             )
 
-            if os.path.exists(data_path):
+            if os.path.exists(data_path) and os.path.isdir(data_path):
                 # Transform into pathlib object for handy operations
                 data_path = pathlib.PurePath(data_path)
 
                 # Create symlink
                 print("Ok, creating the link.")
-                subprocess.call(["ln", "-s", data_path, "."])
+                os.symlink(
+                    src=data_path,
+                    dst=os.path.join(
+                        os.path.abspath(os.curdir),
+                        os.path.basename(data_path),
+                    ),
+                )
 
                 # Add data path to .gitignore
                 with open(".gitignore", "a") as f:
@@ -162,7 +168,8 @@ if __name__ == "__main__":
 
             else:
                 print(
-                    f"The path {data_path} does not exist. Please enter a valid path."
+                    f"The path {data_path} does not exist or is not a directory. "
+                    "Please enter a valid path."
                 )
 
     # 2. Creating link to github repo
@@ -173,7 +180,7 @@ if __name__ == "__main__":
     if create_repo:
         # Query repo name and owner from user
         repo_name = query_field(
-            "What is the name of the github.com repository you wish to link to?",
+            "What of the github.com repository you wish to link to?",
             default="{{cookiecutter.repository_name}}",
             len_limit=100,
         )
@@ -199,14 +206,11 @@ if __name__ == "__main__":
         subprocess.call(["git", "config", "user.name", user_name])
         subprocess.call(["git", "config", "user.email", user_email])
 
-        # TODO: Automatically create repo (only for users without 2FA)
-        # subprocess.call(["curl", "-u",  user_name,  "https://api.github.com/user/repos",  "-d", "{'name':'%s'}" % repo_name])
-
         # Add remote at the repository URL
         subprocess.call(["git", "remote", "add", "origin", repo_url])
         subprocess.call(["git", "add", "-A"])
         subprocess.call(["git", "commit", "-m", "Initalization"])
-        subprocess.call(["git", "push", "-f", "origin", "master"])
+        subprocess.call(["git", "push", "-u", "origin", "master"])
 
         # Unset the user name and email form "cookiecutter" so user can use his own.
         subprocess.call(["git", "config", "--unset", "user.name"])
@@ -223,7 +227,8 @@ if __name__ == "__main__":
 
         if find_executable("conda") is None:
             print(
-                "\U0001F635 No conda executable found. Please first install conda on your machine and add it to the PATH."
+                "\U0001F635 No conda executable found. Please first install conda on "
+                "your machine and add it to the PATH."
             )
         else:
             # Call conda executable to create environment
@@ -241,7 +246,8 @@ if __name__ == "__main__":
             # Provide user feedback on how to activate
             print(f"\U0001F607 Environment successfully created at {env_path}")
             print(
-                "To activate your conda environment, navigate to your project directory and call \n\t conda activate ./env"
+                "To activate your conda environment, navigate to your project "
+                "directory and call \n\t conda activate ./env"
             )
 
             # Update conda config to show only the short name of the env.
