@@ -1,3 +1,13 @@
 {
-    "repository_name": "sample_repo"
+    "repository_name": "sample_repo",
+    "project_name": "Sample project",
+    "author_name": "Your name (or your organization/company/team)",
+    "description": "A short description of the project.",
+    "open_source_license": [
+        "MIT",
+        "BSD",
+        "GPLv3",
+        "No license file"
+    ],
+    "python_version": "3.8"
 }

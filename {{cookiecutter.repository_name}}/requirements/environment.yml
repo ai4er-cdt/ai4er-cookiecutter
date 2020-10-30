@@ -1,0 +1,9 @@
+prefix: ./env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python={{cookiecutter.python_version}}
+  - pip
+  - pip:
+    - -r file:dev-requirements.txt
