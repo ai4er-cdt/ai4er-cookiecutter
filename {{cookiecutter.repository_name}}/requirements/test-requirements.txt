@@ -1,3 +1,4 @@
+# NOTE: These requirements are used for continuous integration (CI)
 # meta requirements
 virtualenv
 

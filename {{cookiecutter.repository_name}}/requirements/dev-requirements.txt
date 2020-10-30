@@ -1,3 +1,6 @@
+# NOTE: These requirements are used for developing code on the repo. 
+# As a standard they include certain formatters and linters.
+
 # local package
 -e ../.
 
