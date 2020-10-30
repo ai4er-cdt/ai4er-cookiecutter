@@ -1,11 +1,16 @@
 # {{cookiecutter.project_name}}
 
-{{cookiecutter.description}}
-{% if cookiecutter.open_source_license == "MIT" %} [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+{% if cookiecutter.open_source_license == "MIT" %} [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 {% elif cookiecutter.open_source_license == "BSD" %} [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 {% elif cookiecutter.open_source_license == "GPLv3" %} [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 {% elif cookiecutter.open_source_license == "Apache Software License 2.0" %} [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-{% endif %}
+{% endif %} <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+
+## Requirements
+- Python {{ cookiecutter.python_version }}+
+
+## Getting started
+
 
 ## Project Organization
 ```
@@ -15,7 +20,7 @@
 |
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
+│                         `1.0_jqp_initial-data-exploration`.
 │
 ├── report             <- Generated analysis as HTML, PDF, LaTeX, etc.
 │   ├── figures        <- Generated graphics and figures to be used in reporting
@@ -40,6 +45,11 @@
 │
 └── setup.cfg          <- setup configuration file for linting
 ```
+
+## Code formatting
+To automatically format your code, make sure you have `black` installed (`pip install black`) and call
+```black . ``` 
+from within the project directory.
 
 ---
 
