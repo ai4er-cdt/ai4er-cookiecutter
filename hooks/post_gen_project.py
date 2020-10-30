@@ -180,7 +180,7 @@ if __name__ == "__main__":
     if create_repo:
         # Query repo name and owner from user
         repo_name = query_field(
-            "What of the github.com repository you wish to link to?",
+            "What is name of the github.com repository you wish to link to?",
             default="{{cookiecutter.repository_name}}",
             len_limit=100,
         )
@@ -199,22 +199,27 @@ if __name__ == "__main__":
         repo_url = "git@github.com:" + repo_owner + "/" + repo_name + ".git"
         print(f"Linking to {repo_url}.")
 
-        # Initialize project as git repository
-        subprocess.call(["git", "init"])
+        try:
+            # Initialize project as git repository
+            subprocess.call(["git", "init"])
 
-        # Configure git username and email
-        subprocess.call(["git", "config", "user.name", user_name])
-        subprocess.call(["git", "config", "user.email", user_email])
+            # Configure git username and email
+            subprocess.call(["git", "config", "user.name", user_name])
+            subprocess.call(["git", "config", "user.email", user_email])
 
-        # Add remote at the repository URL
-        subprocess.call(["git", "remote", "add", "origin", repo_url])
-        subprocess.call(["git", "add", "-A"])
-        subprocess.call(["git", "commit", "-m", "Initalization"])
-        subprocess.call(["git", "push", "-u", "origin", "master"])
+            # Add remote at the repository URL
+            subprocess.call(["git", "remote", "add", "origin", repo_url])
+            subprocess.call(["git", "add", "-A"])
+            subprocess.call(["git", "commit", "-m", "Initalization"])
+            subprocess.call(["git", "push", "-u", "origin", "master"])
 
-        # Unset the user name and email form "cookiecutter" so user can use his own.
-        subprocess.call(["git", "config", "--unset", "user.name"])
-        subprocess.call(["git", "config", "--unset", "user.email"])
+            # Unset the user name and email form "cookiecutter" so user can use his own.
+            subprocess.call(["git", "config", "--unset", "user.name"])
+            subprocess.call(["git", "config", "--unset", "user.email"])
+
+        except Exception as e:
+            print("Github link creation failed. Please link the repo manually.")
+            print(e)
 
     # 3. Creating conda environment
     # TODO: Add venv environment creation as alternative
@@ -228,40 +233,28 @@ if __name__ == "__main__":
         if find_executable("conda") is None:
             print(
                 "\U0001F635 No conda executable found. Please first install conda on "
-                "your machine and add it to the PATH."
+                "your machine and add it to the PATH. "
+                "Then call `make create_environment`."
             )
         else:
-            # Call conda executable to create environment
-            subprocess.call(
-                [
-                    "conda",
-                    "env",
-                    "create",
-                    "--prefix=./env",
-                    "-f",
-                    "requirements/environment.yml",
-                ]
-            )
-            env_path = os.path.abspath("./env")
-            # Provide user feedback on how to activate
-            print(f"\U0001F607 Environment successfully created at {env_path}")
-            print(
-                "To activate your conda environment, navigate to your project "
-                "directory and call \n\t conda activate ./env"
-            )
+            try:
+                # Call conda executable to create environment
+                subprocess.call("make create_environment".split(" "))
 
-            # Update conda config to show only the short name of the env.
-            subprocess.call("conda config --set env_prompt '({name})'".split(" "))
+                # Update conda config to show only the short name of the env.
+                subprocess.call("conda config --set env_prompt '({name})'".split(" "))
 
-            # Activate conda
-            print("Activating environment.")
-            subprocess.call(
-                "conda activate ./env".split(" ")
-            )  # TODO: Does not seem to work yet.
-            subprocess.call(
-                "pip install -r requirements/dev-requirements.txt".split(" ")
-            )
-            if query_yes_no("Would you like to install jupyter tools?", default="no"):
-                subprocess.call("sh ./.setup_scripts/jupyter_tools.sh".split(" "))
+                # TODO: Automatic Jupyter notebook installation fails due to
+                # not working conda activate ./env
+                # if query_yes_no(
+                #    "Would you like to install jupyter tools?", default="no"
+                # ):
+                #    subprocess.call("conda init".split(" "))
+                #    subprocess.call("conda activate ./env".split(" "))
+                #    subprocess.call("make install_jupyter_tools".split(" "))
+
+            except Exception as e:
+                print("Environment creation failed. Please create environment manually")
+                print(e)
 
     os.chdir("..")
