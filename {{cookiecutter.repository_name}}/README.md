@@ -19,22 +19,23 @@
 ├── README.md          <- The top-level README for developers using this project.
 |
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0_jqp_initial-data-exploration`.
+|   |                     the creator's initials, and a short `-` delimited description, e.g.
+|   |                     `1.0_jqp_initial-data-exploration`.
+│   ├── exploratory    <- Notebooks for initial exploration.
+│   └── reports        <- Polished notebooks for presentations or intermediate results.
 │
 ├── report             <- Generated analysis as HTML, PDF, LaTeX, etc.
 │   ├── figures        <- Generated graphics and figures to be used in reporting
 │   └── sections       <- LaTeX sections. The report folder can be linked to your overleaf
 |                         report with github submodules.
 │
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
+├── requirements       <- Directory containing the requirement files.
 │
 ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
 ├── src                <- Source code for use in this project.
 │   ├── __init__.py    <- Makes src a Python module
 │   │
-│   ├── data           <- Scripts to download or generate data
+│   ├── data_loading   <- Scripts to download or generate data
 │   │
 │   ├── preprocessing  <- Scripts to turn raw data into clean data and features for modeling
 |   |
@@ -43,7 +44,7 @@
 │   │
 │   └── tests          <- Scripts for unit tests of your functions
 │
-└── setup.cfg          <- setup configuration file for linting
+└── setup.cfg          <- setup configuration file for linting rules
 ```
 
 ## Code formatting
