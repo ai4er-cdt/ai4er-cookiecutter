@@ -1,4 +1,4 @@
-.PHONY: clean lint format create_environment
+.PHONY: clean lint format create_environment install_jupyter_tools
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -49,6 +49,15 @@ else
 	@bash -c "source `which virtualenvwrapper.sh`;mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER)"
 	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
 endif
+
+## Install and set up handy jupyter notebook extensions
+install_jupyter_tools:
+	sh ./.setup_scripts/jupyter_tools.sh
+
+## Set up sweet vscode settings
+vscode_beautiful:
+	mkdir .vscode
+	cp ./.setup_scripts/vscode_settings.jsonc .vscode/settings.json
 
 #################################################################################
 # PROJECT RULES                                                                 #

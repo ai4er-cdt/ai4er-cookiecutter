@@ -1,6 +1,6 @@
 # Get general jupyter extensions
-pip3 install jupyter
-pip3 install jupyter_contrib_nbextensions
+pip install jupyter
+pip install jupyter_contrib_nbextensions
 jupyter nbextensions_configurator enable --user
 jupyter contrib nbextension install --user
 
